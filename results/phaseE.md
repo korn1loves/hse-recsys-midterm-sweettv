@@ -64,7 +64,7 @@ Candidate submissions (refit weeks 11-30, pool 6,632 from the 31-42 schedule, al
 | results/submission_e06.csv | pers+rate+ar+mf+slot_4    | pers=1 rate=0.25 ar=0.25 mf=1 slot_4=1      | rank     |           4 | 0.28912 |     0.24082 | 0.26497 | best rank fusion by mean |
 | results/submission_e07.csv | pers+rate+ar+mf+slot_4    | pers=1 rate=0.25 ar=0.25 mf=1 slot_4=1      | minmax   |           4 | 0.32982 |     0.28163 | 0.30572 | overall best by mean     |
 
-**Selection plan:** the final pick among these files is made by Kaggle PUBLIC score; the private leaderboard stays held out. These validation numbers were not tuned on Kaggle scores.
+**Selection rule:** Methods are compared on the temporal validation; among submitted files the designated final submission is the one with the highest Kaggle PRIVATE score, as the exam rules specify; this makes the reported private score optimistic (test-selected).
 
 Phase E runtime 106.3s
 

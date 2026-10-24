@@ -4,6 +4,8 @@
 
 **Results** (MAP@5, validation main = 11-20→21-30 / secondary = 11-24→25-30): Phase D Hybrid2 0.333 / 0.282, Hybrid3 0.333 / 0.284, schedule-slot exposure 0.316 / 0.268; Phase B/C hybrid 0.302 / 0.262, personal history 0.297 / 0.262, popularity 0.177 / 0.153, AR 0.175 / 0.151, MF 0.091 / 0.074, CBF 0.004 / 0.004. All numbers and protocol details are in `results/report_data.md`.
 
+**Selection rule.** Methods are compared on the temporal validation; among submitted files the designated final submission is the one with the highest Kaggle PRIVATE score, as the exam rules specify; this makes the reported private score optimistic (test-selected).
+
 ## Reproduce
 
 1. Download the competition data into `data/sweettv-tv-program-recommender/` (`dataset11-30.csv`, `export_arh_{11-20,21-30,31-42}-final.csv`, `submission.csv`). It is not in git.
@@ -32,6 +34,7 @@
    ../.venv/bin/python phase_h2.py        # no-slot re-rankers    -> results/phaseH2.md, submission_h04..h06.csv (appended to phaseH_manifest.csv)
    ../.venv/bin/python phase_i.py         # rank-level ensembles  -> results/phaseI.md, phaseI_manifest.csv, submission_i01..i04.csv
    ../.venv/bin/python phase_j.py         # re-ranker v2          -> results/phaseJ.md, phaseJ_manifest.csv, submission_j01,j02,j04.csv
+   ../.venv/bin/python phase_k.py         # bagged v2 re-ranker   -> results/phaseK.md, phaseK_manifest.csv, submission_k01..k04.csv
                                           #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
@@ -50,6 +53,7 @@
 | `src/cbf.py` | TF-IDF content-based filtering on schedule attributes |
 | `src/ar.py` | item-to-item association rules |
 | `src/exposure.py` | Phase D: schedule-slot exposure CBF, rate-normalised personal history |
+| `src/phase_k.py` | Phase K: bagged v2 re-ranker (10 seeds, user bootstrap), blends with f03 |
 | `src/phase_j.py` | Phase J: re-ranker v2 (more windows with a programmatic leak rule, top-50 candidates, extra features, graded labels) |
 | `src/phase_i.py` | Phase I: rank-level ensembles (RRF-style k, Borda top-30) of hybrids and re-rankers |
 | `src/rerank.py`, `src/phase_h.py`, `src/phase_h2.py` | Phase H: windows, candidate generation, features, HistGradientBoosting re-ranker, blend |
@@ -63,12 +67,13 @@
 | `results/report_data.md` | all numbers for the course report |
 | `results/phaseA_report.md`, `results/phaseBC.md`, `results/examples.md` | phase reports, example users |
 | `results/submission_hybrid2.csv`, `submission_hybrid3.csv`, `submission_exposure.csv` | Phase D submissions (Hybrid2 = best on main, Hybrid3 = best on secondary among near-ties) |
+| `results/submission_k01..k04.csv`, `results/phaseK_manifest.csv` | Phase K candidates |
 | `results/submission_j01,j02,j04.csv`, `results/phaseJ_manifest.csv` | Phase J candidates |
 | `results/submission_i01..i04.csv`, `results/phaseI_manifest.csv` | Phase I ensemble candidates |
 | `results/submission_h01..h06.csv`, `results/phaseH_manifest.csv` | Phase H/H2 candidate set (re-rankers with and without slot signals, blends) |
 | `results/submission_g01..g03.csv`, `results/phaseG_manifest.csv` | Phase G candidate set |
-| `results/submission_f01..f08.csv`, `results/phaseF_manifest.csv` | Phase F candidate set (pick by Kaggle public score) |
-| `results/submission_e01..e07.csv`, `results/phaseE_manifest.csv` | Phase E candidate set (final pick by Kaggle public score) |
+| `results/submission_f01..f08.csv`, `results/phaseF_manifest.csv` | Phase F candidate set |
+| `results/submission_e01..e07.csv`, `results/phaseE_manifest.csv` | Phase E candidate set |
 | `results/submission_final.csv`, `results/submission_baseline.csv` | Phase B/C hybrid and Phase A personal-history submissions (none are submitted by the scripts) |
 
 ## Environment

@@ -1,0 +1,5 @@
+file,method,trained_on,bagging,main,secondary,mean,overlap_with_j02
+results/submission_k01.csv,bagged v2 + f03 0.5/0.5 (k01),W0+Ws1+Ws2+W12+W1b+W1+W2,"10 members, seeds 0-9, user bootstrap",0.33704,0.28505,0.31104,0.963
+results/submission_k02.csv,bagged no-slot v2 + f03 0.5/0.5 (k02),W0+Ws1+Ws2+W12+W1b+W1+W2,"10 members, seeds 0-9, user bootstrap",0.33276,0.28308,0.30792,0.931
+results/submission_k03.csv,bagged v2 0.25 + bagged no-slot 0.25 + f03 0.5 (k03),W0+Ws1+Ws2+W12+W1b+W1+W2,"10 members, seeds 0-9, user bootstrap",0.33419,0.28464,0.30942,0.952
+results/submission_k04.csv,bagged v2 alone (k04),W0+Ws1+Ws2+W12+W1b+W1+W2,"10 members, seeds 0-9, user bootstrap",0.34043,0.29051,0.31547,0.878

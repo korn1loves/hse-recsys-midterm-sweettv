@@ -5,7 +5,7 @@ results/phaseE_single.csv, results/phaseE_manifest.csv, results/submission_e01.c
 Configs: Hybrid5 base (pers 1, rate 0.25, AR 0.25, MF 1) + one habit component
 {slot hl4, daypart hl None/4/8, channel hl None/4/8} with weight {0, 0.25, 0.5, 1}, fused either by
 per-user min-max (as before) or by reciprocal-rank fusion sum_c w_c / (60 + rank_c). Ranked by the mean
-of main and secondary MAP@5. Final choice among files is made by the user from Kaggle PUBLIC scores.
+of main and secondary MAP@5. Final submission: highest Kaggle PRIVATE score among submitted files (exam rule; test-selected).
 """
 import itertools
 import time
@@ -176,8 +176,7 @@ def main():
           f"Candidate submissions (refit weeks 11-30, pool {len(pool):,} from the 31-42 schedule, all validated; "
           f"refit {time.time() - t:.1f}s):\n",
           man.to_markdown(index=False), "",
-          "**Selection plan:** the final pick among these files is made by Kaggle PUBLIC score; the private "
-          "leaderboard stays held out. These validation numbers were not tuned on Kaggle scores.\n",
+          "**Selection rule:** Methods are compared on the temporal validation; among submitted files the designated final submission is the one with the highest Kaggle PRIVATE score, as the exam rules specify; this makes the reported private score optimistic (test-selected).\n",
           f"Phase E runtime {time.time() - T0:.1f}s\n"]
     (RES / "phaseE.md").write_text("\n".join(md) + "\n")
     print("\n".join(md))
