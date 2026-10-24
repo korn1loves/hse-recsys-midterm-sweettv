@@ -1,0 +1,4 @@
+file,method,label,params,trained_on,main,secondary,overlap_with_h02
+results/submission_j01.csv,v2 best alone (graded (regressor)),graded (regressor),lr=0.05 leaves=15 max_iter=200 (early stopping),W0+Ws1+Ws2+W12+W1b+W1+W2,0.33909,0.28792,0.86
+results/submission_j02.csv,v2 best + f03 0.5/0.5,graded (regressor),lr=0.05 leaves=15 max_iter=200 (early stopping),W0+Ws1+Ws2+W12+W1b+W1+W2,0.33575,0.28492,0.931
+results/submission_j04.csv,v2 best 0.4 + f03 0.6,graded (regressor),lr=0.05 leaves=15 max_iter=200 (early stopping),W0+Ws1+Ws2+W12+W1b+W1+W2,0.3335,0.28327,0.929
