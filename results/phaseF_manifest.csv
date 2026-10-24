@@ -1,0 +1,9 @@
+file,habits,weights,fusion,main,secondary,mean,overlap_with_e04
+results/submission_f01.csv,daypart_4 1.5,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1.5,minmax,0.31941,0.27387,0.29664,0.932
+results/submission_f02.csv,daypart_4 2,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=2,minmax,0.31847,0.26955,0.29401,0.891
+results/submission_f03.csv,daypart_4 1 + channel_4 0.5,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5,minmax,0.32297,0.27591,0.29944,0.908
+results/submission_f04.csv,daypart_4 1 + channel_4 1,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=1,minmax,0.31814,0.26884,0.29349,0.845
+results/submission_f05.csv,daypart_4 1 + slot_4 0.5,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 slot_4=0.5,minmax,0.32662,0.28125,0.30394,0.932
+results/submission_f06.csv,daypart_None 1,pers=1 rate=0.25 ar=0.25 mf=1 daypart_None=1,minmax,0.31942,0.27407,0.29674,0.876
+results/submission_f07.csv,daypart_4 1 + channel_4 0.5 + slot_4 0.5,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5 slot_4=0.5,minmax,0.32803,0.28128,0.30465,0.894
+results/submission_f08.csv,channel_4 1,pers=1 rate=0.25 ar=0.25 mf=1 channel_4=1,minmax,0.31428,0.26517,0.28972,0.803

@@ -635,3 +635,46 @@ Phase E runtime 106.3s
 - Mean item overlap of each file with Hybrid5: e01 0.818, e02 0.873, e03 0.922, e04 0.845, e05 0.821, e06 0.768.
 - **On validation, coarser habits do not beat the exact slot.** Taken alone: slot 0.292 > daypart 0.257 > channel 0.220 (mean of the two splits). In the hybrid at its best weight: daypart 0.29992 and channel 0.29592, both below Hybrid5's 0.30572, with paired CIs excluding 0. Validation cannot test the autumn-grid hypothesis, because its target windows share the spring/summer grid. That is why the coarse variants are offered as public-leaderboard candidates.
 - **RRF (k = 60) is much worse than min-max fusion** (best mean 0.26497 vs 0.30572). With k = 60, a component's contributions barely change across the top ranks (1/61 vs 1/65), so the order of a strong component like personal history gets diluted by the full rankings from MF and exposure. MF ranks every pool item.
+
+## 12. Phase F: several habit components at once (src/phase_f.py)
+
+**Kaggle results reported by the user from their manual submissions (private / public; not computed in this repo):**
+
+| submission | private | public |
+|---|---|---|
+| e04 (base + daypart_4 1) | 0.28302 | 0.31297 |
+| e05 (base + channel_4 0.5) | 0.27870 | 0.31350 |
+| Hybrid5 (base + slot_4 1) | 0.27402 | 0.30492 |
+| e03 (base + slot_4 0.5) | 0.27389 | 0.30468 |
+| e02 (base + slot_4 0.25) | 0.27144 | 0.30311 |
+| e01 (base only) | 0.26544 | 0.29997 |
+| e06 (RRF) | 0.26148 | 0.29088 |
+
+Coarse habit components transfer to the test weeks better than exact hour slots. This is the opposite of the validation ranking, consistent with the autumn grid differing from the spring/summer grid that both validation windows share.
+
+**Configs.**
+- All configs use base = pers 1, rate 0.25, AR 0.25, MF 1, with per-user min-max fusion. The habit components below are added to it.
+- The 8 configs were specified by the user. None were tuned here. Validation scores are reported for the record only, and they are *not* used for selection.
+- Each file was refit on weeks 11-30 with the 6,632-show pool from the 31-42 schedule and validated with the Phase A checks.
+- `overlap_with_e04` = mean share of a row's 5 items that also appear in e04.
+
+| file                       | habits                                   | weights                                                            | fusion   |    main |   secondary |    mean |   overlap_with_e04 |
+|:---------------------------|:-----------------------------------------|:-------------------------------------------------------------------|:---------|--------:|------------:|--------:|-------------------:|
+| results/submission_f01.csv | daypart_4 1.5                            | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1.5                        | minmax   | 0.31941 |     0.27387 | 0.29664 |              0.932 |
+| results/submission_f02.csv | daypart_4 2                              | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=2                          | minmax   | 0.31847 |     0.26955 | 0.29401 |              0.891 |
+| results/submission_f03.csv | daypart_4 1 + channel_4 0.5              | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5            | minmax   | 0.32297 |     0.27591 | 0.29944 |              0.908 |
+| results/submission_f04.csv | daypart_4 1 + channel_4 1                | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=1              | minmax   | 0.31814 |     0.26884 | 0.29349 |              0.845 |
+| results/submission_f05.csv | daypart_4 1 + slot_4 0.5                 | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 slot_4=0.5               | minmax   | 0.32662 |     0.28125 | 0.30394 |              0.932 |
+| results/submission_f06.csv | daypart_None 1                           | pers=1 rate=0.25 ar=0.25 mf=1 daypart_None=1                       | minmax   | 0.31942 |     0.27407 | 0.29674 |              0.876 |
+| results/submission_f07.csv | daypart_4 1 + channel_4 0.5 + slot_4 0.5 | pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5 slot_4=0.5 | minmax   | 0.32803 |     0.28128 | 0.30465 |              0.894 |
+| results/submission_f08.csv | channel_4 1                              | pers=1 rate=0.25 ar=0.25 mf=1 channel_4=1                          | minmax   | 0.31428 |     0.26517 | 0.28972 |              0.803 |
+
+Phase F runtime 62.5s
+
+**Consistency check.** f06 (daypart_None 1) reproduces the Phase E value for the same config: main 0.31942.
+
+**Validation vs Kaggle.**
+- On validation, configs that include the exact slot (f05, f07) rank highest. On Kaggle so far, the slot model has transferred worst.
+- The validation ordering is therefore not informative for this choice.
+
+**Selection rule.** The final submission is chosen by Kaggle PUBLIC score among all candidate files; the private leaderboard stays held out. Choosing among several files by public score carries some risk of overfitting the public split, so a large public gap matters more than a small one.
