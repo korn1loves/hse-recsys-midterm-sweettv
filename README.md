@@ -29,6 +29,7 @@
    ../.venv/bin/python phase_f.py         # fixed multi-habit configs -> results/phaseF_manifest.csv, submission_f01..f08.csv
    ../.venv/bin/python phase_g.py         # title families        -> results/phaseG.md, phaseG_manifest.csv, submission_g01..g03.csv
    ../.venv/bin/python phase_h.py         # learned re-ranker     -> results/phaseH.md, phaseH_manifest.csv, submission_h01..h03.csv
+   ../.venv/bin/python phase_h2.py        # no-slot re-rankers    -> results/phaseH2.md, submission_h04..h06.csv (appended to phaseH_manifest.csv)
                                           #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
@@ -47,7 +48,7 @@
 | `src/cbf.py` | TF-IDF content-based filtering on schedule attributes |
 | `src/ar.py` | item-to-item association rules |
 | `src/exposure.py` | Phase D: schedule-slot exposure CBF, rate-normalised personal history |
-| `src/rerank.py`, `src/phase_h.py` | Phase H: windows, candidate generation, features, HistGradientBoosting re-ranker, blend |
+| `src/rerank.py`, `src/phase_h.py`, `src/phase_h2.py` | Phase H: windows, candidate generation, features, HistGradientBoosting re-ranker, blend |
 | `src/family.py`, `src/phase_g.py` | Phase G: title-family key, family personal / rate components, family fallback, ablation |
 | `src/phase_f.py` | Phase F: user-specified multi-habit configs (no tuning) + manifest |
 | `src/phase_e.py` | Phase E: coarse habit components, reciprocal-rank fusion, candidate submissions + manifest |
@@ -58,7 +59,7 @@
 | `results/report_data.md` | all numbers for the course report |
 | `results/phaseA_report.md`, `results/phaseBC.md`, `results/examples.md` | phase reports, example users |
 | `results/submission_hybrid2.csv`, `submission_hybrid3.csv`, `submission_exposure.csv` | Phase D submissions (Hybrid2 = best on main, Hybrid3 = best on secondary among near-ties) |
-| `results/submission_h01..h03.csv`, `results/phaseH_manifest.csv` | Phase H candidate set (re-ranker, blend, long-window re-ranker) |
+| `results/submission_h01..h06.csv`, `results/phaseH_manifest.csv` | Phase H/H2 candidate set (re-rankers with and without slot signals, blends) |
 | `results/submission_g01..g03.csv`, `results/phaseG_manifest.csv` | Phase G candidate set |
 | `results/submission_f01..f08.csv`, `results/phaseF_manifest.csv` | Phase F candidate set (pick by Kaggle public score) |
 | `results/submission_e01..e07.csv`, `results/phaseE_manifest.csv` | Phase E candidate set (final pick by Kaggle public score) |

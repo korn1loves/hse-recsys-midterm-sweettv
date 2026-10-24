@@ -1,4 +1,7 @@
-file,method,trained_on,params,main,secondary,overlap_with_f03
-results/submission_h01.csv,re-ranker (best grid),W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33817,0.28606,0.783
-results/submission_h02.csv,rank-average blend re-ranker/f03 0.5/0.5,W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33557,0.28461,0.876
-results/submission_h03.csv,"re-ranker, longer-history windows only",W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),n/a,0.28343,0.773
+file,method,trained_on,params,main,secondary,overlap_with_f03,overlap_with_h01
+results/submission_h01.csv,re-ranker (best grid),W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33817,0.28606,0.783,
+results/submission_h02.csv,rank-average blend re-ranker/f03 0.5/0.5,W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33557,0.28461,0.876,
+results/submission_h03.csv,"re-ranker, longer-history windows only",W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),,0.28343,0.773,
+results/submission_h04.csv,"re-ranker, no slot features",W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33283,0.28219,0.785,0.868
+results/submission_h05.csv,"re-ranker, no slot features, no slot candidates",W0+W1+W2,lr=0.05 leaves=31 max_iter=200 (early stopping),0.33508,0.28275,0.779,0.86
+results/submission_h06.csv,rank-average blend h04 / f03 0.5/0.5,W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.3338,0.28188,0.88,0.848
