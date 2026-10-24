@@ -9,6 +9,9 @@ Schedule-slot CBF ("exposure"): slot = (channel, hour-of-week), 168 hours per ch
   gets weight 0.5^((last_week - w)/hl) and the denominator is sum_w weight_w * 3600.
 - Score = P @ A = expected watched seconds of the show in the target window.
 
+Phase E coarse habit variants (gran="daypart": (channel, weekday/weekend, 4-hour block), 12 slots
+per channel; gran="channel": channel only) use the same construction with coarser slots.
+
 Rate-normalised personal history: rate(u,s) = user's history seconds on s / s's total history
 airtime (labelled airings starting in history weeks); score = rate * s's target-window airtime.
 """
@@ -22,6 +25,20 @@ import scipy.sparse as sps
 import data
 
 HOURS = 168
+# slots per channel for each granularity: exact hour-of-week, (weekday/weekend x 4-hour block), channel only
+GRAN = {"slot": 168, "daypart": 12, "channel": 1}
+
+
+def _slot(ch, hour, gran="slot"):
+    """Slot index for channel ids and epoch-hour indices at the given granularity."""
+    how = _how(hour)
+    if gran == "slot":
+        sub = how
+    elif gran == "daypart":
+        sub = (how // 24 >= 5).astype(np.int64) * 6 + (how % 24) // 4
+    else:
+        sub = np.zeros_like(how)
+    return ch.astype(np.int64) * GRAN[gran] + sub
 
 
 def _hour_pieces(start_s, stop_s):
@@ -49,15 +66,15 @@ def week_start_epoch(week, year=2020):
                - dt.datetime(1970, 1, 1).timestamp())
 
 
-def airtime_matrix(parts, weeks, pool, n_ch):
+def airtime_matrix(parts, weeks, pool, n_ch, gran="slot"):
     """A: (n_ch*168) x len(pool) seconds of labelled airtime per slot, airings starting in `weeks`."""
     s = data.load_schedule_all(parts)
     s = s[(s.tv_show_id != 0) & s.week.isin(list(weeks)) & s.tv_show_id.isin(pool)]
     st = _epoch(s.start_time)
     rep, hour, sec = _hour_pieces(st, st + s.duration.values)
-    slot = s.channel_id.values[rep].astype(np.int64) * HOURS + _how(hour)
+    slot = _slot(s.channel_id.values[rep], hour, gran)
     col = np.searchsorted(pool, s.tv_show_id.values[rep])
-    A = sps.csr_matrix((sec.astype(float), (slot, col)), shape=(n_ch * HOURS, len(pool)))
+    A = sps.csr_matrix((sec.astype(float), (slot, col)), shape=(n_ch * GRAN[gran], len(pool)))
     A.sum_duplicates()
     return A
 
@@ -68,7 +85,7 @@ def show_airtime(parts, weeks):
     return s.groupby("tv_show_id").duration.sum()
 
 
-def profile_matrix(users, hist_weeks, n_ch, half_life=None):
+def profile_matrix(users, hist_weeks, n_ch, half_life=None, gran="slot"):
     """P: len(users) x (n_ch*168) slot-watch probabilities from all history views."""
     log = data.load_log().drop_duplicates()
     log = log[log.user_id.isin(users) & log.week.isin(list(hist_weeks))]
@@ -86,8 +103,8 @@ def profile_matrix(users, hist_weeks, n_ch, half_life=None):
     users = np.asarray(users, dtype=np.uint64)
     order = np.argsort(users)
     row = order[np.searchsorted(users[order], log.user_id.values[rep])]
-    slot = log.vsetv_id.values[rep].astype(np.int64) * HOURS + _how(hour)
-    P = sps.csr_matrix((sec * w / denom, (row, slot)), shape=(len(users), n_ch * HOURS))
+    slot = _slot(log.vsetv_id.values[rep], hour, gran)
+    P = sps.csr_matrix((sec * w / denom, (row, slot)), shape=(len(users), n_ch * GRAN[gran]))
     P.sum_duplicates()
     return P
 
@@ -96,11 +113,11 @@ def n_channels(parts):
     return int(max(data.load_log().vsetv_id.max(), data.load_schedule_all(parts).channel_id.max())) + 1
 
 
-def exposure_scores(sp, hist_weeks, sched_parts, target_weeks, half_life=None):
+def exposure_scores(sp, hist_weeks, sched_parts, target_weeks, half_life=None, gran="slot"):
     t0 = time.time()
     n_ch = n_channels(sched_parts)
-    P = profile_matrix(sp.users, hist_weeks, n_ch, half_life)
-    A = airtime_matrix(sched_parts, target_weeks, np.asarray(sp.pool), n_ch)
+    P = profile_matrix(sp.users, hist_weeks, n_ch, half_life, gran)
+    A = airtime_matrix(sched_parts, target_weeks, np.asarray(sp.pool), n_ch, gran)
     fit = time.time() - t0
     t1 = time.time()
     S = (P @ A).toarray()

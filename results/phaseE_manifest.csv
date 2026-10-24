@@ -1,0 +1,8 @@
+file,components,weights,fusion,half_life,main,secondary,mean,why
+results/submission_e01.csv,pers+rate+ar+mf,pers=1 rate=0.25 ar=0.25 mf=1,minmax,,0.30497,0.26378,0.28437,slot ladder w=0.0
+results/submission_e02.csv,pers+rate+ar+mf+slot_4,pers=1 rate=0.25 ar=0.25 mf=1 slot_4=0.25,minmax,4.0,0.31499,0.27104,0.29301,slot ladder w=0.25
+results/submission_e03.csv,pers+rate+ar+mf+slot_4,pers=1 rate=0.25 ar=0.25 mf=1 slot_4=0.5,minmax,4.0,0.32234,0.27665,0.29949,slot ladder w=0.5
+results/submission_e04.csv,pers+rate+ar+mf+daypart_4,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1,minmax,4.0,0.32275,0.27709,0.29992,best daypart by mean
+results/submission_e05.csv,pers+rate+ar+mf+channel_4,pers=1 rate=0.25 ar=0.25 mf=1 channel_4=0.5,minmax,4.0,0.3201,0.27174,0.29592,best channel by mean
+results/submission_e06.csv,pers+rate+ar+mf+slot_4,pers=1 rate=0.25 ar=0.25 mf=1 slot_4=1,rank,4.0,0.28912,0.24082,0.26497,best rank fusion by mean
+results/submission_e07.csv,pers+rate+ar+mf+slot_4,pers=1 rate=0.25 ar=0.25 mf=1 slot_4=1,minmax,4.0,0.32982,0.28163,0.30572,overall best by mean; byte-identical to submission_hybrid5.csv (already scored on Kaggle)

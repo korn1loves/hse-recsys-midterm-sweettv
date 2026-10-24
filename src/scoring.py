@@ -65,3 +65,13 @@ def minmax_rows(S, valid):
     hi = np.nanmax(np.where(valid.any(1, keepdims=True), M, 0), axis=1, keepdims=True)
     Z = (S - lo) / np.where(hi > lo, hi - lo, 1)
     return np.where(valid, Z, 0.0)
+
+
+def rrf_rows(S, valid, k=60):
+    """Reciprocal-rank contribution 1/(k + rank) per valid item (rank 1 = best; ties -> smaller id)."""
+    M = np.where(valid, S, -np.inf)
+    order = np.argsort(-M, axis=1, kind="stable")
+    ranks = np.empty_like(order)
+    rows = np.arange(M.shape[0])[:, None]
+    ranks[rows, order] = np.arange(1, M.shape[1] + 1)[None, :]
+    return np.where(valid, 1.0 / (k + ranks), 0.0)
