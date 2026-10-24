@@ -35,6 +35,7 @@
    ../.venv/bin/python phase_i.py         # rank-level ensembles  -> results/phaseI.md, phaseI_manifest.csv, submission_i01..i04.csv
    ../.venv/bin/python phase_j.py         # re-ranker v2          -> results/phaseJ.md, phaseJ_manifest.csv, submission_j01,j02,j04.csv
    ../.venv/bin/python phase_k.py         # bagged v2 re-ranker   -> results/phaseK.md, phaseK_manifest.csv, submission_k01..k04.csv
+   ../.venv/bin/python phase_l.py         # target-definition probe -> results/phaseL.md, phaseL_table.csv, submission_l01..l05.csv
                                           #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
@@ -53,6 +54,7 @@
 | `src/cbf.py` | TF-IDF content-based filtering on schedule attributes |
 | `src/ar.py` | item-to-item association rules |
 | `src/exposure.py` | Phase D: schedule-slot exposure CBF, rate-normalised personal history |
+| `src/phase_l.py` | Phase L: personal-history rankings under five target definitions (5x5 probe) |
 | `src/phase_k.py` | Phase K: bagged v2 re-ranker (10 seeds, user bootstrap), blends with f03 |
 | `src/phase_j.py` | Phase J: re-ranker v2 (more windows with a programmatic leak rule, top-50 candidates, extra features, graded labels) |
 | `src/phase_i.py` | Phase I: rank-level ensembles (RRF-style k, Borda top-30) of hybrids and re-rankers |
@@ -67,6 +69,7 @@
 | `results/report_data.md` | all numbers for the course report |
 | `results/phaseA_report.md`, `results/phaseBC.md`, `results/examples.md` | phase reports, example users |
 | `results/submission_hybrid2.csv`, `submission_hybrid3.csv`, `submission_exposure.csv` | Phase D submissions (Hybrid2 = best on main, Hybrid3 = best on secondary among near-ties) |
+| `results/submission_l01..l05.csv`, `results/phaseL_manifest.csv` | Phase L target-definition probes (l01 = baseline) |
 | `results/submission_k01..k04.csv`, `results/phaseK_manifest.csv` | Phase K candidates |
 | `results/submission_j01,j02,j04.csv`, `results/phaseJ_manifest.csv` | Phase J candidates |
 | `results/submission_i01..i04.csv`, `results/phaseI_manifest.csv` | Phase I ensemble candidates |

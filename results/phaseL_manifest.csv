@@ -1,0 +1,6 @@
+file,ranking,main (T1 seconds),secondary (T1 seconds),main (own target),secondary (own target),overlap_with_baseline
+results/submission_l01.csv,total seconds,0.29708,0.26248,0.29708,0.26248,1.0
+results/submission_l02.csv,# watched airings,0.29583,0.25297,0.40804,0.37492,0.715
+results/submission_l03.csv,# distinct days,0.29964,0.25693,0.4088,0.37621,0.723
+results/submission_l04.csv,# distinct weeks,0.29357,0.25149,0.36955,0.34576,0.703
+results/submission_l05.csv,episode-equivalents,0.26232,0.22501,0.4097,0.38496,0.617
