@@ -523,3 +523,39 @@ Each file passes the same checks as before: template header, 1,260 rows in templ
 |      4 |       200506 | Звездный путь.                   | Развлечения |
 |      5 |     12002733 | М/с 'Буба'.                      | Детям       |
 
+
+## 10. Phase D2: robustness grid around Hybrid3
+
+**Context, reported by the user from their manual Kaggle submissions (private MAP@5, not computed in this repo):** Hybrid3 0.26923, Hybrid2 0.26807, Hybrid1 0.26507, personal history 0.24821, exposure alone 0.24023. Validation over-estimated exposure on the test weeks. These numbers were used only as a reason to be conservative, never for tuning.
+
+
+Grid: {'w_exp': [0.5, 1, 2, 3, 4], 'hl': [None, 4, 8], 'w_rate': [0.25, 0.5, 1], 'w_pers': [1, 2]} with AR 0.25 and MF 1 fixed; 90 configs. Selection rule: rank by the mean of main and secondary MAP@5 (secondary is closer to the test horizon). Kaggle scores were NOT used for tuning.
+
+Hybrid3 reference: main 0.33297, secondary 0.28413, mean 0.30855.
+
+Top 10 (Δ = paired bootstrap mean difference vs Hybrid3, 95% CI, 1000 resamples, seed 0):
+
+|   w_pers |   w_rate |   w_exp |      hl |    w_ar |    w_mf |   MAP@5_main |   MAP@5_secondary |    mean | Δ vs H3 main                  | Δ vs H3 secondary             |
+|---------:|---------:|--------:|--------:|--------:|--------:|-------------:|------------------:|--------:|:------------------------------|:------------------------------|
+|        2 |  1.00000 | 3.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33361 |           0.28435 | 0.30898 | +0.00064 [-0.00153, +0.00263] | +0.00021 [-0.00150, +0.00186] |
+|        1 |  1.00000 | 3.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33321 |           0.28411 | 0.30866 | +0.00024 [-0.00151, +0.00199] | -0.00002 [-0.00142, +0.00148] |
+|        2 |  0.50000 | 4.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33307 |           0.28418 | 0.30863 | +0.00010 [-0.00165, +0.00180] | +0.00005 [-0.00158, +0.00173] |
+|        1 |  0.50000 | 2.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33297 |           0.28413 | 0.30855 | +0.00000 [+0.00000, +0.00000] | +0.00000 [+0.00000, +0.00000] |
+|        2 |  1.00000 | 4.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33291 |           0.28387 | 0.30839 | -0.00006 [-0.00166, +0.00150] | -0.00026 [-0.00172, +0.00130] |
+|        2 |  0.25000 | 4.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33241 |           0.28430 | 0.30836 | -0.00056 [-0.00238, +0.00131] | +0.00017 [-0.00164, +0.00201] |
+|        1 |  1.00000 | 4.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33210 |           0.28416 | 0.30813 | -0.00087 [-0.00303, +0.00124] | +0.00003 [-0.00218, +0.00222] |
+|        1 |  0.50000 | 3.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33263 |           0.28338 | 0.30801 | -0.00034 [-0.00234, +0.00158] | -0.00075 [-0.00253, +0.00112] |
+|        2 |  0.50000 | 3.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33230 |           0.28348 | 0.30789 | -0.00067 [-0.00214, +0.00097] | -0.00065 [-0.00206, +0.00075] |
+|        1 |  0.25000 | 2.00000 | 4.00000 | 0.25000 | 1.00000 |      0.33172 |           0.28394 | 0.30783 | -0.00125 [-0.00265, +0.00021] | -0.00019 [-0.00141, +0.00102] |
+
+- **Hybrid4** (best by mean): {'pers': 2.0, 'rate': 1.0, 'exp_4': 3.0, 'ar': 0.25, 'mf': 1.0} → main 0.33361, secondary 0.28435, mean 0.30898 → `results/submission_hybrid4.csv`
+- **Hybrid5** (best with w_exp ≤ 1, conservative): {'pers': 1.0, 'rate': 0.25, 'exp_4': 1.0, 'ar': 0.25, 'mf': 1.0} → main 0.32982, secondary 0.28163, mean 0.30572 → `results/submission_hybrid5.csv`
+- Refit on weeks 11-30 with the 31-42 schedule pool (6,632 shows); files validated with the Phase A checks.
+
+Phase D2 runtime 87.4s
+
+**Best mean MAP@5 by exposure half-life:** 4 weeks 0.30898, 8 weeks 0.30767, none 0.30371.
+
+**Best mean MAP@5 by w_exp:** 0.5 → 0.29949, 1 → 0.30572, 2 → 0.30855, 3 → 0.30898, 4 → 0.30863.
+
+**Interpretation.** Hybrid4 is not distinguishable from Hybrid3: the paired CIs include 0 on both splits (+0.00064 on main, +0.00021 on secondary). The validation surface is flat around w_exp 2-4. The conservative Hybrid5 (w_exp 1) is about 0.003 lower on both splits; it would only help if exposure is over-weighted on the test weeks, as the Kaggle numbers above suggest.

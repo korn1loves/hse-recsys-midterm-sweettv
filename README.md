@@ -23,6 +23,7 @@
    ../.venv/bin/python hybrid.py          # MF/CBF/AR/hybrid     -> results/phaseBC.md, comparison.csv,
                                           #   mf_grid.csv, hybrid_grid.csv, examples.md, submission_final.csv
    ../.venv/bin/python phase_d.py         # exposure/rate/hybrid2 -> results/phaseD.md, phaseD_*.csv,
+   ../.venv/bin/python phase_d2.py        # grid around Hybrid3   -> results/phaseD2.md, submission_hybrid{4,5}.csv
                                           #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
