@@ -1275,5 +1275,9 @@ Phase L runtime 10.0s
   - **The competition counts airings or days** if l02 or l03 beat l01 by a wide margin (validation suggests about +0.06 to +0.07).
   - **It counts episode-equivalents** if l05 is best.
 - **Consistency checks:**
-  - The rebuilt T1 target equals the existing target on both splits.
+  - **The rebuilt T1 target is not exactly identical to the existing target**, though the difference is tiny.
+    - Phase L merges a user's views of one airing across weeks (assigning it to the earliest week) before applying the 300 s threshold. The existing target thresholds each (user, airing, week) row separately.
+    - Main: 2 of 1,246 users have a different top-5 (3 items swapped). Secondary: 1 of 1,244 (one list differs by one item).
+    - MAP@5 of l01 under T1 equals the existing-target value to 5 decimals (0.29708 / 0.26248).
+    - A first version of this report said the targets were equal; that was wrong and has been corrected.
   - `submission_l01.csv` is byte-identical to `submission_baseline.csv`.
