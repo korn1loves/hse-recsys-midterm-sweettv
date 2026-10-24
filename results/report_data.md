@@ -802,5 +802,5 @@ Phase G runtime 72.0s
 - **The f03 + family-rate gain does not come from families.** It is +0.0059 on main and +0.0036 on secondary, significant on both. But giving the plain per-id rate component weight 1.25 instead of 0.25 reproduces it: 0.32864 / 0.27941 vs 0.32889 / 0.27951. The gain is the rate signal getting more weight.
 - **The family-aware fallback never changes predictions.** With MF in the hybrid, every pool item is valid for users with history, so the fallback is never reached. Its final file was identical to g01 and was not written.
 - **g02 (family replaces pers) is a near-duplicate of f03**, sharing 99.8% of items.
-- **g01 vs g03** isolates the family effect on the public leaderboard: they share 0.938 of their items, with 74.4% of rows identical.
+- **g01 vs g03 are nearly identical on the final refit:** they share 0.998 of their items, and 97.9% of rows are identical. The family component adds essentially nothing beyond more rate weight, so submitting both is unlikely to be informative.
 - **Selection rule (unchanged):** pick by Kaggle public score; private stays held out.
