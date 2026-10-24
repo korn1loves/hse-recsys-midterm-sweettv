@@ -1,0 +1,4 @@
+file,config,fallback,weights,main,secondary,mean,overlap_with_f03,why
+results/submission_g01.csv,f03 + famR 1,id,pers=1 rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5 famR=1,0.32889,0.27951,0.3042,0.902,f03 + family at best weight by mean
+results/submission_g02.csv,"f03, pers -> famP",id,rate=0.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5 famP=1,0.32303,0.27582,0.29942,0.998,family replaces pers (best by mean)
+results/submission_g03.csv,ablation: f03 with id-rate 1.25,id,pers=1 rate=1.25 ar=0.25 mf=1 daypart_4=1 channel_4=0.5,0.32864,0.27941,0.30402,0.902,ablation: same gain without families?
