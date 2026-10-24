@@ -1,0 +1,137 @@
+{'split': 'main', 'hist_min_sec': 0, 'method': 'a_pop_all', 'MAP@5': 0.1768459069020867, 'runtime_s': 0.01314091682434082}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'b_pop_pool', 'MAP@5': 0.1768459069020867, 'runtime_s': 0.04616665840148926}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'b2_pop_pool_users', 'MAP@5': 0.17408507223113967, 'runtime_s': 0.10537290573120117}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.1825628678437667, 'runtime_s': 0.034796714782714844}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.1825628678437667, 'runtime_s': 0.034178972244262695}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.03460407257080078}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'd_personal', 'MAP@5': 0.29708400214018194, 'runtime_s': 0.09086108207702637}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'd_personal_hl1', 'MAP@5': 0.22301498127340824, 'runtime_s': 0.1181340217590332}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'd_personal_hl2', 'MAP@5': 0.2715543071161049, 'runtime_s': 0.113037109375}
+{'split': 'main', 'hist_min_sec': 0, 'method': 'd_personal_hl4', 'MAP@5': 0.29607544141252, 'runtime_s': 0.11379098892211914}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'a_pop_all', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.009804964065551758}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'b_pop_pool', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.04537534713745117}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'b2_pop_pool_users', 'MAP@5': 0.1775227394328518, 'runtime_s': 0.06736612319946289}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.18673622257891923, 'runtime_s': 0.02475595474243164}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.1825628678437667, 'runtime_s': 0.024220943450927734}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.024305105209350586}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'd_personal', 'MAP@5': 0.29496522204387376, 'runtime_s': 0.06852293014526367}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'd_personal_hl1', 'MAP@5': 0.22111556982343497, 'runtime_s': 0.08160209655761719}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'd_personal_hl2', 'MAP@5': 0.2705163188871054, 'runtime_s': 0.08160996437072754}
+{'split': 'main', 'hist_min_sec': 300, 'method': 'd_personal_hl4', 'MAP@5': 0.29455591225254146, 'runtime_s': 0.0830080509185791}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'a_pop_all', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.007859945297241211}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'b_pop_pool', 'MAP@5': 0.1791252006420546, 'runtime_s': 0.04471921920776367}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'b2_pop_pool_users', 'MAP@5': 0.17624665596575712, 'runtime_s': 0.04704904556274414}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.18673622257891923, 'runtime_s': 0.0167391300201416}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.1825628678437667, 'runtime_s': 0.016429901123046875}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.1825628678437667, 'runtime_s': 0.016131877899169922}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'd_personal', 'MAP@5': 0.28301498127340824, 'runtime_s': 0.055200815200805664}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'd_personal_hl1', 'MAP@5': 0.20383627608346708, 'runtime_s': 0.06334996223449707}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'd_personal_hl2', 'MAP@5': 0.2539753879079722, 'runtime_s': 0.06395101547241211}
+{'split': 'main', 'hist_min_sec': 900, 'method': 'd_personal_hl4', 'MAP@5': 0.28026484751203856, 'runtime_s': 0.06492209434509277}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'a_pop_all', 'MAP@5': 0.15295016077170417, 'runtime_s': 0.016875028610229492}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'b_pop_pool', 'MAP@5': 0.15295016077170417, 'runtime_s': 0.04654884338378906}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'b2_pop_pool_users', 'MAP@5': 0.1512245444801715, 'runtime_s': 0.1223752498626709}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.04424595832824707}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.042981863021850586}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.15562968917470524, 'runtime_s': 0.044013023376464844}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'd_personal', 'MAP@5': 0.262478563772776, 'runtime_s': 0.105438232421875}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'd_personal_hl1', 'MAP@5': 0.18865755627009645, 'runtime_s': 0.12773609161376953}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'd_personal_hl2', 'MAP@5': 0.23632636655948555, 'runtime_s': 0.14282011985778809}
+{'split': 'secondary', 'hist_min_sec': 0, 'method': 'd_personal_hl4', 'MAP@5': 0.26299035369774915, 'runtime_s': 0.13231801986694336}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'a_pop_all', 'MAP@5': 0.15295016077170417, 'runtime_s': 0.01206207275390625}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'b_pop_pool', 'MAP@5': 0.15295016077170417, 'runtime_s': 0.16227293014526367}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'b2_pop_pool_users', 'MAP@5': 0.1512245444801715, 'runtime_s': 0.0833730697631836}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.03261423110961914}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.030821800231933594}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.15562968917470524, 'runtime_s': 0.030927181243896484}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'd_personal', 'MAP@5': 0.26083869239013935, 'runtime_s': 0.08425617218017578}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'd_personal_hl1', 'MAP@5': 0.18622186495176848, 'runtime_s': 0.11969304084777832}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'd_personal_hl2', 'MAP@5': 0.23381564844587352, 'runtime_s': 0.10092902183532715}
+{'split': 'secondary', 'hist_min_sec': 300, 'method': 'd_personal_hl4', 'MAP@5': 0.26111736334405145, 'runtime_s': 0.10098910331726074}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'a_pop_all', 'MAP@5': 0.15562968917470524, 'runtime_s': 0.009824991226196289}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'b_pop_pool', 'MAP@5': 0.15562968917470524, 'runtime_s': 0.047231435775756836}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'b2_pop_pool_users', 'MAP@5': 0.1502920685959271, 'runtime_s': 0.059214115142822266}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl1', 'MAP@5': 0.15445069667738479, 'runtime_s': 0.022540807723999023}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl2', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.023110151290893555}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'c_pop_pool_hl4', 'MAP@5': 0.15798767416934623, 'runtime_s': 0.02280879020690918}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'd_personal', 'MAP@5': 0.2534994640943194, 'runtime_s': 0.0669548511505127}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'd_personal_hl1', 'MAP@5': 0.17068595927116825, 'runtime_s': 0.07871580123901367}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'd_personal_hl2', 'MAP@5': 0.2196918542336549, 'runtime_s': 0.07822108268737793}
+{'split': 'secondary', 'hist_min_sec': 900, 'method': 'd_personal_hl4', 'MAP@5': 0.24925509110396568, 'runtime_s': 0.0782630443572998}
+# Reference baselines (generated by src/baselines.py)
+
+## Split `main`: history weeks 11-20 -> target 21-30
+
+- eval users (submission users with non-empty target @ 300s): 1,246/1,260; with watched history (>=300s): 1,238
+- target length distribution: {1: 1, 2: 1, 3: 1, 5: 1243}
+- candidate pool size: 6,376; target items outside pool: 0/818
+- share of eval users' target items already watched by the user in history: 66.36%
+
+## Split `secondary`: history weeks 11-24 -> target 25-30
+
+- eval users (submission users with non-empty target @ 300s): 1,244/1,260; with watched history (>=300s): 1,238
+- target length distribution: {1: 1, 2: 3, 3: 1, 4: 1, 5: 1238}
+- candidate pool size: 5,013; target items outside pool: 0/855
+- share of eval users' target items already watched by the user in history: 62.25%
+
+## MAP@5 (target threshold fixed at 300 s; columns = history watch threshold)
+
+### main
+
+| method            |   hist>=0s |   hist>=300s |   hist>=900s |
+|:------------------|-----------:|-------------:|-------------:|
+| a_pop_all         |    0.17685 |      0.17913 |      0.17913 |
+| b2_pop_pool_users |    0.17409 |      0.17752 |      0.17625 |
+| b_pop_pool        |    0.17685 |      0.17913 |      0.17913 |
+| c_pop_pool_hl1    |    0.18256 |      0.18674 |      0.18674 |
+| c_pop_pool_hl2    |    0.18256 |      0.18256 |      0.18256 |
+| c_pop_pool_hl4    |    0.17913 |      0.17913 |      0.18256 |
+| d_personal        |    0.29708 |      0.29497 |      0.28301 |
+| d_personal_hl1    |    0.22301 |      0.22112 |      0.20384 |
+| d_personal_hl2    |    0.27155 |      0.27052 |      0.25398 |
+| d_personal_hl4    |    0.29608 |      0.29456 |      0.28026 |
+
+### secondary
+
+| method            |   hist>=0s |   hist>=300s |   hist>=900s |
+|:------------------|-----------:|-------------:|-------------:|
+| a_pop_all         |    0.15295 |      0.15295 |      0.15563 |
+| b2_pop_pool_users |    0.15122 |      0.15122 |      0.15029 |
+| b_pop_pool        |    0.15295 |      0.15295 |      0.15563 |
+| c_pop_pool_hl1    |    0.15799 |      0.15799 |      0.15445 |
+| c_pop_pool_hl2    |    0.15799 |      0.15799 |      0.15799 |
+| c_pop_pool_hl4    |    0.15563 |      0.15563 |      0.15799 |
+| d_personal        |    0.26248 |      0.26084 |      0.25350 |
+| d_personal_hl1    |    0.18866 |      0.18622 |      0.17069 |
+| d_personal_hl2    |    0.23633 |      0.23382 |      0.21969 |
+| d_personal_hl4    |    0.26299 |      0.26112 |      0.24926 |
+
+Mean runtime per fit+predict (s):
+
+| method            |   runtime_s |
+|:------------------|------------:|
+| a_pop_all         |        0.01 |
+| b2_pop_pool_users |        0.08 |
+| b_pop_pool        |        0.07 |
+| c_pop_pool_hl1    |        0.03 |
+| c_pop_pool_hl2    |        0.03 |
+| c_pop_pool_hl4    |        0.03 |
+| d_personal        |        0.08 |
+| d_personal_hl1    |        0.10 |
+| d_personal_hl2    |        0.10 |
+| d_personal_hl4    |        0.10 |
+
+## Target-threshold sensitivity (history threshold 0s)
+
+|                                 |       0 |     300 |     900 |
+|:--------------------------------|--------:|--------:|--------:|
+| ('main', 'b_pop_pool')          | 0.18169 | 0.17685 | 0.15723 |
+| ('main', 'c_pop_pool_hl1')      | 0.18699 | 0.18256 | 0.16317 |
+| ('main', 'd_personal')          | 0.30139 | 0.29708 | 0.27647 |
+| ('secondary', 'b_pop_pool')     | 0.15530 | 0.15295 | 0.12872 |
+| ('secondary', 'c_pop_pool_hl1') | 0.16033 | 0.15799 | 0.13524 |
+| ('secondary', 'd_personal')     | 0.26570 | 0.26248 | 0.23746 |
+
+eval users per target threshold: {('main', 0): 1246, ('main', 300): 1246, ('main', 900): 1245, ('secondary', 0): 1244, ('secondary', 300): 1244, ('secondary', 900): 1242}
+
+Total runtime 13.5s
