@@ -340,3 +340,186 @@ Truth (top-5 watched in weeks 21-30):
 |      4 |     12001734 | М/с 'Волшебные покровители', 154 с. 'Хочу это вырезать / Мэр | Детям       |
 |      5 |     12002771 | М/с 'Черепашки-ниндзя', 3 сезон, 12 с. 'Битва за Нью-Йорк -  | Детям       |
 
+
+## 9. Phase D: score improvement (src/exposure.py, src/phase_d.py)
+
+Same protocol as before: splits, target, pool, repeat policy, fallback and MAP@5. The target-window schedule is used only for what airs on which channel and when.
+
+**Schedule-slot CBF ("exposure").**
+- A slot is a (channel, hour-of-week) pair: 168 weekly hours per channel, with Monday 00:00 = hour 0.
+- **Item side:** A[slot, show] = seconds of the show's labelled airings (airings starting in a target week) overlapping each clock hour, summed over the target window.
+- **User side:** P[user, slot] = seconds of *all* history viewing, labelled or not, on channel c in hour-of-week h, divided by n_history_weeks × 3600. This is the user's probability of watching that slot.
+  - Views are clipped at the start of the first target week, so no target-window seconds enter.
+  - With recency half-life hl, week w is weighted 0.5^((last_week − w)/hl), and the denominator becomes Σ_w weight_w × 3600.
+- **Score:** P @ A (sparse), i.e. the expected seconds the user will watch the show in the target window. Valid items: score > 0. Fit takes about 2 s per variant and predict 0.04 s.
+
+**Rate-normalised personal history.** rate(u, s) = the user's history seconds on s / s's total labelled history airtime. Score = rate × s's airtime in the target-window schedule; shows the user hasn't seen score 0. Fit takes 0.3 s.
+
+**Hybrid re-tuning.**
+- Per-user min-max of each component, then a weighted sum.
+- Grid on main: w_pers ∈ {0, 1}, w_rate ∈ {0, .5, 1, 2}, w_exp ∈ {0, .25, .5, 1, 2} (using the best exposure variant, half-life 4), w_ar ∈ {0, .25}, w_mf ∈ {0, 1}. That is 159 non-zero configs.
+- Configs within 0.002 of the best on main were also scored on secondary.
+- **Hybrid2** (best on main): pers 1, rate 1, exposure 2, AR 0.25, MF 1.
+- **Hybrid3** (within 0.002 on main, best on secondary among those): pers 1, rate 0.5, exposure 2, AR 0.25, MF 1.
+- The best configs sit at w_exp = 2, the edge of the grid. Larger exposure weights were not explored because of the time budget.
+
+**Comparison (MAP@5, 95% bootstrap CI over users, 1000 resamples, seed 0):**
+
+| method | main | main 95% CI | secondary | secondary 95% CI |
+|---|---|---|---|---|
+| Hybrid2 (pers 1, rate 1, exp 2, AR .25, MF 1) | **0.33315** | [0.3180, 0.3475] | 0.28205 | [0.2697, 0.2963] |
+| Hybrid3 (pers 1, rate .5, exp 2, AR .25, MF 1) | 0.33297 | [0.3178, 0.3473] | **0.28413** | [0.2715, 0.2979] |
+| Exposure (half-life 4 wk) | 0.31623 | [0.3016, 0.3309] | 0.26773 | [0.2548, 0.2818] |
+| Exposure (no recency) | 0.31316 | [0.2990, 0.3277] | 0.26463 | [0.2521, 0.2788] |
+| Exposure (half-life 2 wk) | 0.30383 | [0.2903, 0.3183] | 0.25335 | [0.2408, 0.2670] |
+| Old hybrid (pers 1, MF 1, AR .25) | 0.30178 | [0.2874, 0.3148] | 0.26164 | [0.2493, 0.2753] |
+| Personal history | 0.29708 | [0.2830, 0.3102] | 0.26248 | [0.2497, 0.2769] |
+| Rate-normalised personal | 0.27635 | [0.2626, 0.2895] | 0.22782 | [0.2167, 0.2402] |
+| Popularity (pool, seconds) | 0.17685 | [0.1666, 0.1865] | 0.15295 | [0.1440, 0.1625] |
+| Association rules | 0.17543 | [0.1653, 0.1847] | 0.15143 | [0.1425, 0.1608] |
+| MF (ALS) | 0.09094 | [0.0830, 0.0993] | 0.07367 | [0.0669, 0.0803] |
+| CBF (attributes; Phase B/C) | 0.00383 | [0.0025, 0.0052] | 0.00417 | [0.0028, 0.0056] |
+
+**Paired bootstrap vs the old hybrid (mean difference, 95% CI):**
+
+| | main | secondary |
+|---|---|---|
+| Hybrid2 | +0.03136 [+0.02561, +0.03742] | +0.02041 [+0.01538, +0.02538] |
+| Hybrid3 | +0.03119 [+0.02540, +0.03698] | +0.02249 [+0.01737, +0.02724] |
+
+Both improvements are significant on both splits.
+
+**Why exposure works.** It is the first method that uses *when* a show airs in the target window together with the user's channel and hour habits. That includes 40.7% of viewing time on unlabelled airtime, which no item-feedback model can use. It also scores new shows: any show airing in a slot the user habitually watches gets a score, even if the user never watched it.
+
+**Final refits.** History weeks 11-30 (exposure profile from weeks 11-30 views, all validated), pool and airtime from the 6,632 labelled shows starting in weeks 31-42. Refit takes 13 s; the whole Phase D run takes 72 s.
+- `results/submission_exposure.csv`: exposure with half-life 4 alone.
+- `results/submission_hybrid2.csv`: Hybrid2.
+- `results/submission_hybrid3.csv`: Hybrid3.
+
+Each file passes the same checks as before: template header, 1,260 rows in template order, 5 distinct non-zero pool ids, LF line endings, no trailing newline.
+
+
+#### Heavy viewer: user 13571199046623737884; truth = [240081, 200352, 6500479, 2500413, 2400480]
+
+**Exposure (half-life 4 wk)** (AP@5 = 0.333):
+
+|   rank |   tv_show_id | title                                                     | category       | hit   |
+|-------:|-------------:|:----------------------------------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо           | ✓     |
+|      2 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения    |       |
+|      3 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп.                         | Познавательное | ✓     |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо           |       |
+|      5 |      2400467 | 'Викна-Новости'.                                          | Инфо           |       |
+
+**Exposure (no recency)** (AP@5 = 0.333):
+
+|   rank |   tv_show_id | title                                                     | category       | hit   |
+|-------:|-------------:|:----------------------------------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо           | ✓     |
+|      2 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения    |       |
+|      3 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп.                         | Познавательное | ✓     |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо           |       |
+|      5 |      2400467 | 'Викна-Новости'.                                          | Инфо           |       |
+
+**Rate-normalised personal** (AP@5 = 0.453):
+
+|   rank |   tv_show_id | title                             | category       | hit   |
+|-------:|-------------:|:----------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                    | Инфо           | ✓     |
+|      2 |       700389 | Кто сверху?, 6 сезон, 7 эп.       | Развлечения    |       |
+|      3 |       240081 | Факты. День.                      | Инфо           | ✓     |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.  | Инфо           |       |
+|      5 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп. | Познавательное | ✓     |
+
+**Hybrid2** (AP@5 = 0.520):
+
+|   rank |   tv_show_id | title                                                     | category       | hit   |
+|-------:|-------------:|:----------------------------------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо           | ✓     |
+|      2 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп.                         | Познавательное | ✓     |
+|      3 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения    |       |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо           |       |
+|      5 |       240081 | Факты. День.                                              | Инфо           | ✓     |
+
+**Hybrid3** (AP@5 = 0.453):
+
+|   rank |   tv_show_id | title                                                     | category       | hit   |
+|-------:|-------------:|:----------------------------------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо           | ✓     |
+|      2 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения    |       |
+|      3 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп.                         | Познавательное | ✓     |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо           |       |
+|      5 |       240081 | Факты. День.                                              | Инфо           | ✓     |
+
+**Hybrid2, final weeks 31-42 Top-5:**
+
+|   rank |   tv_show_id | title                                                     | category       |
+|-------:|-------------:|:----------------------------------------------------------|:---------------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо           |
+|      2 |       240081 | Факты. День.                                              | Инфо           |
+|      3 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо           |
+|      4 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения    |
+|      5 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп.                         | Познавательное |
+
+#### Light viewer: user 970670590731358344; truth = [5800509, 12001863, 12002733, 12002771, 12001734]
+
+**Exposure (half-life 4 wk)** (AP@5 = 0.000):
+
+|   rank |   tv_show_id | title                       | category   | hit   |
+|-------:|-------------:|:----------------------------|:-----------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.              | Инфо       |       |
+|      2 |      6700482 | 'Секретные материалы'.      | Другое     |       |
+|      3 |       240081 | Факты. День.                | Инфо       |       |
+|      4 |     90079798 | Х/ф 'Очень плохие мамочки'. | Фильмы     |       |
+|      5 |     90072303 | Х/ф 'Ешь, молись, люби'.    | Фильмы     |       |
+
+**Exposure (no recency)** (AP@5 = 0.000):
+
+|   rank |   tv_show_id | title                       | category   | hit   |
+|-------:|-------------:|:----------------------------|:-----------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.              | Инфо       |       |
+|      2 |      6700482 | 'Секретные материалы'.      | Другое     |       |
+|      3 |       240081 | Факты. День.                | Инфо       |       |
+|      4 |     90079798 | Х/ф 'Очень плохие мамочки'. | Фильмы     |       |
+|      5 |     90072303 | Х/ф 'Ешь, молись, люби'.    | Фильмы     |       |
+
+**Rate-normalised personal** (AP@5 = 0.000):
+
+|   rank |   tv_show_id | title                                                     | category    | hit   |
+|-------:|-------------:|:----------------------------------------------------------|:------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                                            | Инфо        |       |
+|      2 |       240081 | Факты. День.                                              | Инфо        |       |
+|      3 |      6700482 | 'Секретные материалы'.                                    | Другое      |       |
+|      4 |      2400508 | Сегодня. Итоги с Олегом Панютой.                          | Инфо        |       |
+|      5 |        20088 | 'Завтрак с 1+1'. Информационно-развлекательная программа. | Развлечения |       |
+
+**Hybrid2** (AP@5 = 0.000):
+
+|   rank |   tv_show_id | title                             | category       | hit   |
+|-------:|-------------:|:----------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                    | Инфо           |       |
+|      2 |      6700482 | 'Секретные материалы'.            | Другое         |       |
+|      3 |       240081 | Факты. День.                      | Инфо           |       |
+|      4 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп. | Познавательное |       |
+|      5 |      2400508 | Сегодня. Итоги с Олегом Панютой.  | Инфо           |       |
+
+**Hybrid3** (AP@5 = 0.000):
+
+|   rank |   tv_show_id | title                             | category       | hit   |
+|-------:|-------------:|:----------------------------------|:---------------|:------|
+|      1 |      2400480 | 'ТСН. Неделя'.                    | Инфо           |       |
+|      2 |      6700482 | 'Секретные материалы'.            | Другое         |       |
+|      3 |       240081 | Факты. День.                      | Инфо           |       |
+|      4 |      6500479 | 'Мир наизнанку. Бразилия', 36 эп. | Познавательное |       |
+|      5 |      2400508 | Сегодня. Итоги с Олегом Панютой.  | Инфо           |       |
+
+**Hybrid2, final weeks 31-42 Top-5:**
+
+|   rank |   tv_show_id | title                            | category    |
+|-------:|-------------:|:---------------------------------|:------------|
+|      1 |      5800509 | Реальная мистика.                | Развлечения |
+|      2 |     12001863 | М/с 'Смешарики'.                 | Детям       |
+|      3 |      2400508 | Сегодня. Итоги с Олегом Панютой. | Инфо        |
+|      4 |       200506 | Звездный путь.                   | Развлечения |
+|      5 |     12002733 | М/с 'Буба'.                      | Детям       |
+

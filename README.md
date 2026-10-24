@@ -2,7 +2,7 @@
 
 **Task.** Kaggle "sweet.tv — TV program recommender": predict 5 tv_show_ids (ordered) for each of the 1,260 users in `submission.csv`, for weeks 31-42. The metric is MAP@5. Inputs are a view log for weeks 11-30 and channel schedules for weeks 11-42.
 
-**Results** (MAP@5, validation main = 11-20→21-30 / secondary = 11-24→25-30): Hybrid 0.302 / 0.262, personal history 0.297 / 0.262, popularity 0.177 / 0.153, AR 0.175 / 0.151, MF 0.091 / 0.074, CBF 0.004 / 0.004. All numbers and protocol details are in `results/report_data.md`.
+**Results** (MAP@5, validation main = 11-20→21-30 / secondary = 11-24→25-30): Phase D Hybrid2 0.333 / 0.282, Hybrid3 0.333 / 0.284, schedule-slot exposure 0.316 / 0.268; Phase B/C hybrid 0.302 / 0.262, personal history 0.297 / 0.262, popularity 0.177 / 0.153, AR 0.175 / 0.151, MF 0.091 / 0.074, CBF 0.004 / 0.004. All numbers and protocol details are in `results/report_data.md`.
 
 ## Reproduce
 
@@ -22,9 +22,11 @@
    ../.venv/bin/python make_submission.py # baseline submission  -> results/submission_baseline.csv
    ../.venv/bin/python hybrid.py          # MF/CBF/AR/hybrid     -> results/phaseBC.md, comparison.csv,
                                           #   mf_grid.csv, hybrid_grid.csv, examples.md, submission_final.csv
+   ../.venv/bin/python phase_d.py         # exposure/rate/hybrid2 -> results/phaseD.md, phaseD_*.csv,
+                                          #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
-   The parquet cache (`results/cache/`) is rebuilt automatically and is gitignored. The full pipeline takes about 3-4 minutes on an Apple M4.
+   The parquet cache (`results/cache/`) is rebuilt automatically and is gitignored. The full pipeline takes about 5 minutes on an Apple M4.
 
 ## File map
 
@@ -38,12 +40,15 @@
 | `src/mf.py` | implicit ALS (Hu-Koren-Volinsky) in numpy/scipy |
 | `src/cbf.py` | TF-IDF content-based filtering on schedule attributes |
 | `src/ar.py` | item-to-item association rules |
+| `src/exposure.py` | Phase D: schedule-slot exposure CBF, rate-normalised personal history |
+| `src/phase_d.py` | Phase D driver: new methods, hybrid re-tuning, final refits |
 | `src/hybrid.py` | Phase B/C driver: grids, fusion, comparison, examples, final submission |
 | `src/audit.py`, `src/join_report.py`, `src/make_submission.py` | Phase A reports and baseline submission |
 | `tests/test_metrics.py` | MAP@5 unit tests |
 | `results/report_data.md` | all numbers for the course report |
 | `results/phaseA_report.md`, `results/phaseBC.md`, `results/examples.md` | phase reports, example users |
-| `results/submission_final.csv`, `results/submission_baseline.csv` | Kaggle-format submissions (not submitted by the scripts) |
+| `results/submission_hybrid2.csv`, `submission_hybrid3.csv`, `submission_exposure.csv` | Phase D submissions (Hybrid2 = best on main, Hybrid3 = best on secondary among near-ties) |
+| `results/submission_final.csv`, `results/submission_baseline.csv` | Phase B/C hybrid and Phase A personal-history submissions (none are submitted by the scripts) |
 
 ## Environment
 
