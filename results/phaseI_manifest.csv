@@ -1,0 +1,5 @@
+file,members,weights,k,main,secondary,mean,overlap_with_h02,why
+results/submission_i01.csv,h01+h05+f03,h01=1 h05=1 f03=1,5,0.3374,0.28686,0.31213,0.932,"(b) three-member, best k by mean"
+results/submission_i02.csv,h01+h05+f03+e05,h01=1 h05=1 f03=1 e05=1,5,0.33611,0.28671,0.31141,0.924,"(c) four-member, best k by mean"
+results/submission_i03.csv,h01+h04+h05+f03+f06,h01=1 h04=1 h05=1 f03=1 f06=1,5,0.33619,0.28565,0.31092,0.921,"(d) five-member, best k by mean"
+results/submission_i04.csv,h01+f03,h01=0.7 f03=0.3,20,0.33855,0.28713,0.31284,0.932,best two-member weight variant other than 0.5/0.5; (e) overall best by mean

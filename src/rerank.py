@@ -62,8 +62,9 @@ def _rows(users, uids):
     return o[np.searchsorted(users[o], np.asarray(uids, dtype=np.uint64))]
 
 
-def build(name, itx, hw, tw, users, cats):
-    """Returns dict with candidates (r, c), features X, labels y, f03 scores, fallback, split."""
+def build(name, itx, hw, tw, users, cats, fusions=None):
+    """Returns dict with candidates (r, c), features X, labels y, f03 scores, fallback, split.
+    fusions: optional {name: weights} of extra min-max hybrids to return as (S, V) under "fus"."""
     sp, hw, tw, tparts = make_window(name, itx, hw, tw, users)
     comps, _ = PE.components(sp, hw, tw, VP, tparts)
     pool = np.asarray(sp.pool)
@@ -128,7 +129,8 @@ def build(name, itx, hw, tw, users, cats):
     n_t = sum(len(v) for v in sp.target.values())
     recall = y.sum() / n_t if n_t else float("nan")
     has_t = np.array([u in sp.target for u in sp.users])
-    return {"sp": sp, "r": r, "c": c, "X": X, "y": y, "fb": fb, "f03": fuse(comps, F03),
+    fus = {k: fuse(comps, wts) for k, wts in (fusions or {}).items()}
+    return {"sp": sp, "r": r, "c": c, "X": X, "y": y, "fb": fb, "f03": fuse(comps, F03), "fus": fus,
             "recall": recall, "avg_cand": len(r) / n_u, "train_mask": has_t[r]}
 
 
