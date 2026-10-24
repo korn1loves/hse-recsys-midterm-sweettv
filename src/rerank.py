@@ -88,13 +88,21 @@ def extra_features(sp, hw, tw, tparts, users, c, r):
     return np.column_stack([trend[c], pshare[c], prem_recent[c], prem_target[c], ushare[r]]).astype(np.float32)
 
 
+# Phase M hooks: HIST_FN(itx) -> (user, show, week, sec) history table; TARGET_FN(itx, tw, users) -> target
+HIST_FN = None
+TARGET_FN = None
+
+
 def make_window(name, itx, hw, tw, users):
     hw, tw = list(hw), list(tw)
     tparts = ("31-42",) if min(tw) >= 31 else VP
-    hist = join.user_show_week(join.watched(itx, min_sec=0))
+    hist = HIST_FN(itx) if HIST_FN else join.user_show_week(join.watched(itx, min_sec=0))
     hist = hist[hist.week.isin(hw)]
     pool = B.pool_from_schedule(tparts, tw)
-    target = B.make_target(itx, tw, users) if max(tw) <= 30 else {}
+    if max(tw) > 30:
+        target = {}
+    else:
+        target = TARGET_FN(itx, tw, users) if TARGET_FN else B.make_target(itx, tw, users)
     sp = B.Split(name, hist, pool, users, target, max(hw))
     return sp, hw, tw, tparts
 

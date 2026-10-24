@@ -2,7 +2,9 @@
 
 **Task.** Kaggle "sweet.tv — TV program recommender": predict 5 tv_show_ids (ordered) for each of the 1,260 users in `submission.csv`, for weeks 31-42. The metric is MAP@5. Inputs are a view log for weeks 11-30 and channel schedules for weeks 11-42.
 
-**Results** (MAP@5, validation main = 11-20→21-30 / secondary = 11-24→25-30): Phase D Hybrid2 0.333 / 0.282, Hybrid3 0.333 / 0.284, schedule-slot exposure 0.316 / 0.268; Phase B/C hybrid 0.302 / 0.262, personal history 0.297 / 0.262, popularity 0.177 / 0.153, AR 0.175 / 0.151, MF 0.091 / 0.074, CBF 0.004 / 0.004. All numbers and protocol details are in `results/report_data.md`.
+**Key finding (Phase L/M):** the competition's preference is episode-equivalents (sum over watched airings of min(overlap / airing duration, 1)), not watched seconds; Phase M re-targets everything to it (see `results/report_data.md` §18-19).
+
+**Results under the original seconds target** (MAP@5, validation main = 11-20→21-30 / secondary = 11-24→25-30): Phase D Hybrid2 0.333 / 0.282, Hybrid3 0.333 / 0.284, schedule-slot exposure 0.316 / 0.268; Phase B/C hybrid 0.302 / 0.262, personal history 0.297 / 0.262, popularity 0.177 / 0.153, AR 0.175 / 0.151, MF 0.091 / 0.074, CBF 0.004 / 0.004. All numbers and protocol details are in `results/report_data.md`.
 
 **Selection rule.** Methods are compared on the temporal validation; among submitted files the designated final submission is the one with the highest Kaggle PRIVATE score, as the exam rules specify; this makes the reported private score optimistic (test-selected).
 
@@ -36,6 +38,7 @@
    ../.venv/bin/python phase_j.py         # re-ranker v2          -> results/phaseJ.md, phaseJ_manifest.csv, submission_j01,j02,j04.csv
    ../.venv/bin/python phase_k.py         # bagged v2 re-ranker   -> results/phaseK.md, phaseK_manifest.csv, submission_k01..k04.csv
    ../.venv/bin/python phase_l.py         # target-definition probe -> results/phaseL.md, phaseL_table.csv, submission_l01..l05.csv
+   ../.venv/bin/python phase_m.py         # episode target (T5)   -> results/phaseM.md, phaseM_manifest.csv, submission_l06..l08.csv, submission_m01..m03.csv
                                           #   submission_{exposure,hybrid2,hybrid3}.csv
    cd .. && .venv/bin/python -m pytest -q tests
    ```
@@ -54,6 +57,7 @@
 | `src/cbf.py` | TF-IDF content-based filtering on schedule attributes |
 | `src/ar.py` | item-to-item association rules |
 | `src/exposure.py` | Phase D: schedule-slot exposure CBF, rate-normalised personal history |
+| `src/episodes.py`, `src/phase_m.py` | Phase M: episode-equivalent target and history, episode-unit components, hand hybrid + re-ranker on T5 |
 | `src/phase_l.py` | Phase L: personal-history rankings under five target definitions (5x5 probe) |
 | `src/phase_k.py` | Phase K: bagged v2 re-ranker (10 seeds, user bootstrap), blends with f03 |
 | `src/phase_j.py` | Phase J: re-ranker v2 (more windows with a programmatic leak rule, top-50 candidates, extra features, graded labels) |
@@ -69,6 +73,7 @@
 | `results/report_data.md` | all numbers for the course report |
 | `results/phaseA_report.md`, `results/phaseBC.md`, `results/examples.md` | phase reports, example users |
 | `results/submission_hybrid2.csv`, `submission_hybrid3.csv`, `submission_exposure.csv` | Phase D submissions (Hybrid2 = best on main, Hybrid3 = best on secondary among near-ties) |
+| `results/submission_m01..m03.csv`, `results/submission_l06..l08.csv`, `results/phaseM_manifest.csv` | Phase M candidates (episode target) |
 | `results/submission_l01..l05.csv`, `results/phaseL_manifest.csv` | Phase L target-definition probes (l01 = baseline) |
 | `results/submission_k01..k04.csv`, `results/phaseK_manifest.csv` | Phase K candidates |
 | `results/submission_j01,j02,j04.csv`, `results/phaseJ_manifest.csv` | Phase J candidates |

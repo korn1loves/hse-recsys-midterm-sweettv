@@ -7,6 +7,7 @@ Configs: Hybrid5 base (pers 1, rate 0.25, AR 0.25, MF 1) + one habit component
 per-user min-max (as before) or by reciprocal-rank fusion sum_c w_c / (60 + rank_c). Ranked by the mean
 of main and secondary MAP@5. Final submission: highest Kaggle PRIVATE score among submitted files (exam rule; test-selected).
 """
+import dataclasses
 import itertools
 import time
 
@@ -19,7 +20,7 @@ import join
 import phase_d as PD
 import scoring as SC
 from ar import ar_scores
-from exposure import exposure_scores, rate_scores
+from exposure import exposure_scores, rate_ep_scores, rate_scores
 from metrics import mapk
 from mf import mf_scores
 
@@ -29,22 +30,33 @@ H5 = {**BASE, "slot_4": 1.0}
 HABITS = ["slot_4", "daypart_None", "daypart_4", "daypart_8", "channel_None", "channel_4", "channel_8"]
 W_HAB = [0.25, 0.5, 1.0]
 VP = ("11-20", "21-30")
+# Phase M switch: sp.hist["sec"] holds episodes; rate / AR / MF / exposure use episode units
+EPISODES = False
 
 
 def components(sp, hw, tw, hist_parts, target_parts):
     c = {"pers": SC.personal_scores(sp)}
-    S, v, _ = rate_scores(sp, hist_parts, hw, target_parts, tw)
-    c["rate"] = (S, v)
-    S, v, _ = ar_scores(sp)
-    c["ar"] = (S, v)
-    S, v, _ = mf_scores(sp, *PD.MF_CFG)
-    c["mf"] = (S, v)
+    if EPISODES:
+        S, v, _ = rate_ep_scores(sp, hist_parts, hw, target_parts, tw)
+        c["rate"] = (S, v)
+        S, v, _ = ar_scores(sp, set_min_sec=0.5)  # transaction = shows with >= 0.5 episodes
+        c["ar"] = (S, v)
+        # MF confidence 1 + alpha*log1p(sec/60): pass episodes*60 so that it becomes log1p(episodes)
+        S, v, _ = mf_scores(dataclasses.replace(sp, hist=sp.hist.assign(sec=sp.hist.sec * 60.0)), *PD.MF_CFG)
+        c["mf"] = (S, v)
+    else:
+        S, v, _ = rate_scores(sp, hist_parts, hw, target_parts, tw)
+        c["rate"] = (S, v)
+        S, v, _ = ar_scores(sp)
+        c["ar"] = (S, v)
+        S, v, _ = mf_scores(sp, *PD.MF_CFG)
+        c["mf"] = (S, v)
     parts = tuple(dict.fromkeys(hist_parts + target_parts))
     rt = {}
     for h in HABITS:
         gran, hl = h.split("_")
         t = time.time()
-        S, v, _ = exposure_scores(sp, hw, parts, tw, None if hl == "None" else int(hl), gran)
+        S, v, _ = exposure_scores(sp, hw, parts, tw, None if hl == "None" else int(hl), gran, per_airing=EPISODES)
         c[h] = (S, v)
         rt[h] = time.time() - t
     return c, rt

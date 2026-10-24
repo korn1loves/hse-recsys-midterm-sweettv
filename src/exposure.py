@@ -66,7 +66,7 @@ def week_start_epoch(week, year=2020):
                - dt.datetime(1970, 1, 1).timestamp())
 
 
-def airtime_matrix(parts, weeks, pool, n_ch, gran="slot"):
+def airtime_matrix(parts, weeks, pool, n_ch, gran="slot", per_airing=False):
     """A: (n_ch*168) x len(pool) seconds of labelled airtime per slot, airings starting in `weeks`."""
     s = data.load_schedule_all(parts)
     s = s[(s.tv_show_id != 0) & s.week.isin(list(weeks)) & s.tv_show_id.isin(pool)]
@@ -74,6 +74,8 @@ def airtime_matrix(parts, weeks, pool, n_ch, gran="slot"):
     rep, hour, sec = _hour_pieces(st, st + s.duration.values)
     slot = _slot(s.channel_id.values[rep], hour, gran)
     col = np.searchsorted(pool, s.tv_show_id.values[rep])
+    if per_airing:  # Phase M: each airing contributes 1 in total, split over its slots by time share
+        sec = sec / np.maximum(s.duration.values[rep], 1)
     A = sps.csr_matrix((sec.astype(float), (slot, col)), shape=(n_ch * GRAN[gran], len(pool)))
     A.sum_duplicates()
     return A
@@ -113,11 +115,11 @@ def n_channels(parts):
     return int(max(data.load_log().vsetv_id.max(), data.load_schedule_all(parts).channel_id.max())) + 1
 
 
-def exposure_scores(sp, hist_weeks, sched_parts, target_weeks, half_life=None, gran="slot"):
+def exposure_scores(sp, hist_weeks, sched_parts, target_weeks, half_life=None, gran="slot", per_airing=False):
     t0 = time.time()
     n_ch = n_channels(sched_parts)
     P = profile_matrix(sp.users, hist_weeks, n_ch, half_life, gran)
-    A = airtime_matrix(sched_parts, target_weeks, np.asarray(sp.pool), n_ch, gran)
+    A = airtime_matrix(sched_parts, target_weeks, np.asarray(sp.pool), n_ch, gran, per_airing)
     fit = time.time() - t0
     t1 = time.time()
     S = (P @ A).toarray()
@@ -129,6 +131,32 @@ def rate_scores(sp, hist_parts, hist_weeks, target_parts, target_weeks):
     h = sp.hist[sp.hist.user_id.isin(sp.users)].groupby(["user_id", "tv_show_id"], as_index=False).sec.sum()
     hair = show_airtime(hist_parts, hist_weeks)
     tair = show_airtime(target_parts, target_weeks).reindex(sp.pool).fillna(0).values
+    h = h[h.tv_show_id.isin(sp.pool) & h.tv_show_id.isin(hair.index)]
+    rate = h.sec.values / hair.reindex(h.tv_show_id).values
+    users = np.asarray(sp.users, dtype=np.uint64)
+    order = np.argsort(users)
+    r = order[np.searchsorted(users[order], h.user_id.values)]
+    c = np.searchsorted(np.asarray(sp.pool), h.tv_show_id.values)
+    S = np.zeros((len(users), len(sp.pool)))
+    np.add.at(S, (r, c), rate)
+    S *= tair[None, :]
+    return S, S > 0, {"fit_s": time.time() - t0, "predict_s": 0.0}
+
+
+def show_airings(parts, weeks):
+    """Number of labelled airings per show starting in `weeks` (Phase M episode units)."""
+    s = data.load_schedule_all(parts)
+    s = s[(s.tv_show_id != 0) & s.week.isin(list(weeks))]
+    return s.groupby("tv_show_id").size()
+
+
+def rate_ep_scores(sp, hist_parts, hist_weeks, target_parts, target_weeks):
+    """Episode rate: user's history episodes on s / s's history airings x s's target-window airings
+    (sp.hist["sec"] holds episodes in Phase M)."""
+    t0 = time.time()
+    h = sp.hist[sp.hist.user_id.isin(sp.users)].groupby(["user_id", "tv_show_id"], as_index=False).sec.sum()
+    hair = show_airings(hist_parts, hist_weeks)
+    tair = show_airings(target_parts, target_weeks).reindex(sp.pool).fillna(0).values
     h = h[h.tv_show_id.isin(sp.pool) & h.tv_show_id.isin(hair.index)]
     rate = h.sec.values / hair.reindex(h.tv_show_id).values
     users = np.asarray(sp.users, dtype=np.uint64)
