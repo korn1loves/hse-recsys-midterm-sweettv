@@ -1,0 +1,4 @@
+file,method,trained_on,params,main,secondary,overlap_with_f03
+results/submission_h01.csv,re-ranker (best grid),W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33817,0.28606,0.783
+results/submission_h02.csv,rank-average blend re-ranker/f03 0.5/0.5,W0+W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),0.33557,0.28461,0.876
+results/submission_h03.csv,"re-ranker, longer-history windows only",W1+W2,lr=0.05 leaves=15 max_iter=200 (early stopping),n/a,0.28343,0.773
